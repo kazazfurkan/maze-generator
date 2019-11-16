@@ -1,44 +1,55 @@
-
 var canvas = document.querySelector("canvas");
 var ctx = canvas.getContext("2d");
 var canvasWidth = canvas.width;
 var canvasHeight = canvas.height;
+var mazeBackground = "#FFFFFF";
+var delay = 25;
+var size = 10;
+var w;
+var Cells = [];
+var generating = false;
+var current;
+var visitedList = [];
+var idVar;
 
 var generateBtn = document.querySelector("#generateBtn");
+var sizeOption = document.querySelector("#size-setting");
 
-/*  ************************************************ */
-// setup
+sizeOption.addEventListener("change", () => {
 
-size = 25; // canvas size  (size*size)
-w = canvasWidth / size; // cell size
-var mazeBackground = "#FFFFFF";
-var delay = 25; 
-var Cells = createCells();
-
-var current = Cells[0][0];
-var visitedList = [current];
-current.isVisited = true;
-
-var generating = false;
-
-generateBtn.addEventListener("click", function(){
     if(!generating){
-        generateMaze(delay);
+        size = getCanvasSize(); // canvas size  (size*size)
+        updateCells();
+    }else{
+        clearInterval(idVar);
+        size = getCanvasSize(); // canvas size  (size*size)
+        updateCells()
+        generating = false;
+        generateBtn.innerHTML = "Generate Maze";
     }
-    
 });
 
-/*  ************************************************  */
-// update view
+generateBtn.addEventListener("click", function(){
+    updateCells();
 
-/* ************************************************** */
+    if(!generating){
+        clearCanvas();
+        generating = true;
+        generateMaze(Cells, delay);
+        generateBtn.innerHTML = "Stop Generating";
+    }else{
+        clearInterval(idVar);
+        generating = false;
+        generateBtn.innerHTML = "Generate Maze";
+    } 
+});
 
-function generateMaze(frequency) {
+function generateMaze(listOfCells, frequency) {
 
-    var idVar = setInterval(() => {
+    idVar = setInterval(() => {
         
-        ctx.clearRect(0,0,canvasWidth,canvasHeight);
-        draw();
+        clearCanvas();
+        draw(Cells);
         var next = current.checkNeighbors();
         console.log("Visited:" + visitedList.length + "/" + size*size);
     
@@ -56,39 +67,51 @@ function generateMaze(frequency) {
         // no neighbor available but there are still unvisited cells
          else if(visitedList.length !== size*size){ 
             next = current.previousCell;         
-          current = next;
-           fillCell(current.x, current.y , "#17fc03");
+            current = next;
+            fillCell(current.x, current.y , "#17fc03");
          }
         // no cell remained unvisited
         else{ 
             clearInterval(idVar);
             console.log("COMPLETED!");
+            generating = false;
+            generateBtn.innerHTML = "Generate Maze";
         }
-
-
     }, frequency);
 }
 
+
+function getCanvasSize(){
+    return Number(sizeOption.options[sizeOption.selectedIndex].value);
+}
+
+function updateCells(){
+    w = canvasWidth / size; // cell size
+    Cells = createCells(size);
+    current = Cells[0][0];
+    visitedList = [current];
+    current.isVisited = true;
+}
+
 // create all cell objects
-function createCells (){
-    var cellList = new Array(size);
+function createCells (givenSize){
+    var newCellList = new Array(givenSize);
     
-    for(var x = 0 ; x < size ; x++){
-        cellList[x] = new Array(size);
-        for(var y = 0 ; y < size ; y++){
-            cellList[x][y] = new Cell(x,y);
+    for(var x = 0 ; x < givenSize ; x++){
+        newCellList[x] = new Array(givenSize);
+        for(var y = 0 ; y < givenSize ; y++){
+            newCellList[x][y] = new Cell(x,y);
         }
     }
-
-    return cellList;
+    return newCellList;
 }
 
 // draws all cells to canvas
-function draw(){
+function draw (listOfCells){
 
     for(var i = 0 ; i < size ; i++){
         for(var j = 0 ; j < size ; j++){
-         Cells[i][j].show();
+         listOfCells[i][j].show();
         }
     }
 }
@@ -100,7 +123,6 @@ function Cell (x,y){
     this.y = y;
 
     this.isVisited = false;
-
     this.previousCell;
 
     this.walls = {
@@ -153,25 +175,21 @@ function Cell (x,y){
         if(left && !left.isVisited){
             neighbors.push(left);
         }
-
         //right neighbor
         var right = x < size - 1 ? Cells[x+1][y] : false;
         if( right && !right.isVisited){
             neighbors.push(right);
         }
-
         //top neighbor
         var top =  y > 0 ? Cells[x][y-1] : false;
         if(top && !top.isVisited){
             neighbors.push(top);
         }
-
         //bottom neighbor
         var bottom = y < size -1 ? Cells[x][y+1] : false;
         if(bottom  && !bottom.isVisited){
             neighbors.push(bottom);
         }
-    
         // pick a random neighbor to visit
         if(neighbors.length > 0){
             var r  = Math.floor(Math.random()* neighbors.length);
@@ -182,19 +200,6 @@ function Cell (x,y){
 
     };
 
-}
-
-// function to draw each individual line
-// calling stroke for each line seperately 
-// reduce the performance
-function drawLine (x1,y1,x2,y2){
-    ctx.moveTo(x1,y1);
-    ctx.lineTo(x2,y2);
-}
-
-function fillCell(x,y,color){
-    ctx.fillStyle = color;
-    ctx.fillRect(x*w, y*w, w, w);
 }
 
 // removes the walls -between cells- while moving 
@@ -216,3 +221,19 @@ function removeWalls(currentCell, nextCell){
         nextCell.walls.s = false
     }
 }
+
+
+function drawLine (x1,y1,x2,y2){
+    ctx.moveTo(x1,y1);
+    ctx.lineTo(x2,y2);
+}
+
+function fillCell(x,y,color){
+    ctx.fillStyle = color;
+    ctx.fillRect(x*w, y*w, w, w);
+}
+
+function clearCanvas(){
+    ctx.clearRect(0,0,canvasWidth,canvasHeight);
+}
+

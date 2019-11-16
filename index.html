@@ -3,27 +3,28 @@
     <head>
         <title>Maze Generator</title>
         <link rel="stylesheet" href="css/style.css">
+        <link href="https://fonts.googleapis.com/css?family=Turret+Road:400,700&display=swap" rel="stylesheet">
     </head>
     <body>
-        <div id="canvas-container">
-            <canvas id="canvas" width="500" height="500"></canvas>
-        </div>
         <div id="maze-settings">
-            
-            <label for="size-setting">Size:</label>
-            <select name="size" id="size-setting">
-                <option value="10">10*10</option>
-                <option value="20">20*20</option>
-                <option value="30">30*30</option>
-                <option value="40">40*40</option>
+                <label for="size-setting">Size:</label>
+                <select name="size" id="size-setting">
+                <option value="10">10 x 10</option>
+                <option value="20">20 x 20</option>
+                <option value="30">30 x 30</option>
+                <option value="40">40 x 40</option>
             </select>
 
-            <input type="checkbox" id="immediately">
-            <label for="immediately">Create Immediately?</label>
-
+            <!-- Will be updated -->
+            <!-- <input type="checkbox" id="immediately">
+            <label for="immediately">Create Immediately?</label> -->
+            
             <button id ="generateBtn">Generate Maze</button>
             
-        	<!-- Will be updated soon -->
+        	
+        </div>
+        <div id="canvas-container">
+            <canvas id="canvas" width="600" height="600"></canvas>
         </div>
         
         

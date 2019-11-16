@@ -1,16 +1,35 @@
 body{
     background-color: #555555;
     margin : 0;
+    font-family: 'Turret Road', cursive;
+    font-weight: 700;
 }
 
 button{
     border-radius: 10px;
+    font-family: 'Turret Road', cursive;
+    font-weight: 700;
+    font-size: 1.1rem;
 }
 
-#canvas-container{
-    margin: auto;
-    display: inline-block;
-    width: 100%;
+option{
+    border:none;
+    font-family: 'Turret Road', cursive;
+    font-weight: 700;
+}
+
+select{
+    border:none;
+    font-family: 'Turret Road', cursive;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 10px;
+    outline: none;
+    padding: 5px;
+}
+
+select:hover{
+    background-color: grey;
 }
 
 canvas{
@@ -20,28 +39,36 @@ canvas{
     margin: 30px auto;
 }
 
+#canvas-container{
+    margin: auto;
+    display: inline-block;
+    width: 100%;
+}
+
+#size-option{
+    display: inline-block;
+}
+
 #maze-settings{
-    height: 50px;
+    height: 100px;
     background-color : white; /* highlighted  for visibility*/
     text-align: center;
     text-transform: uppercase;
 }
 
 #generateBtn{
+    margin-left: 5%;
     height: 100%;
+    width: 200px;
     border: none;
     display: inline-block;
-    margin-left: 5%;
-    text-transform: uppercase
-}
-
-#generateBtn:hover{
+    text-transform: uppercase;
+    outline: none;
     background-color: grey;
 }
 
-#size{
-    height: 100%;
-    margin-left: 5%;
+#generateBtn:hover{
+    background-color: teal;
 }
 
 #immediately{
