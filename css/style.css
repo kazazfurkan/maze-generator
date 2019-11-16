@@ -1,5 +1,10 @@
 body{
-    background-color: #232323;
+    background-color: #555555;
+    margin : 0;
+}
+
+button{
+    border-radius: 10px;
 }
 
 #canvas-container{
@@ -9,7 +14,38 @@ body{
 }
 
 canvas{
+    border: 3px solid black;
     display: block;
     background-color: grey;
-    margin: 20px auto;
+    margin: 30px auto;
 }
+
+#maze-settings{
+    height: 50px;
+    background-color : white; /* highlighted  for visibility*/
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#generateBtn{
+    height: 100%;
+    border: none;
+    display: inline-block;
+    margin-left: 5%;
+    text-transform: uppercase
+}
+
+#generateBtn:hover{
+    background-color: grey;
+}
+
+#size{
+    height: 100%;
+    margin-left: 5%;
+}
+
+#immediately{
+    margin-left: 5%;
+}
+
+

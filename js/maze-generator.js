@@ -4,6 +4,7 @@ var ctx = canvas.getContext("2d");
 var canvasWidth = canvas.width;
 var canvasHeight = canvas.height;
 
+var generateBtn = document.querySelector("#generateBtn");
 
 /*  ************************************************ */
 // setup
@@ -11,58 +12,76 @@ var canvasHeight = canvas.height;
 size = 25; // canvas size  (size*size)
 w = canvasWidth / size; // cell size
 var mazeBackground = "#FFFFFF";
-var frequency = 0;
-
-// create Cell objects
-var Cells = new Array(size);
-for(var x = 0 ; x < size ; x++){
-    Cells[x] = new Array(size);
-    for(var y = 0 ; y < size ; y++){
-        Cells[x][y] = new Cell(x,y);
-    }
-}
+var delay = 25; 
+var Cells = createCells();
 
 var current = Cells[0][0];
 var visitedList = [current];
 current.isVisited = true;
 
-/*  ************************************************  */
-// update canvas
+var generating = false;
 
-setInterval(() => {
-    ctx.clearRect(0,0,canvasWidth,canvasHeight);
-    draw();
-    var next = current.checkNeighbors();
-    console.log("Visited:" + visitedList.length + "/" + size*size);
+generateBtn.addEventListener("click", function(){
+    if(!generating){
+        generateMaze(delay);
+    }
     
-    // neighbor available for next move
-    if(next){
-        next.isVisited = true;
-        next.previousCell = current;
+});
 
-        removeWalls(current,next);
-        
-        current = next;
-        visitedList.push(current);
-        fillCell(current.x, current.y , "#17fc03");
-    }
-    // no neighbor available but there are still unvisited cells
-    else if(visitedList.length !== size*size){ 
-        next = current.previousCell;         
-        current = next;
-        fillCell(current.x, current.y , "#17fc03");
-    }
-    // no cell remained unvisited
-    else{ 
-        clearInterval("1");
-        console.log("COMPLETED!");
-    }
-
-
-}, frequency);
-
+/*  ************************************************  */
+// update view
 
 /* ************************************************** */
+
+function generateMaze(frequency) {
+
+    var idVar = setInterval(() => {
+        
+        ctx.clearRect(0,0,canvasWidth,canvasHeight);
+        draw();
+        var next = current.checkNeighbors();
+        console.log("Visited:" + visitedList.length + "/" + size*size);
+    
+        // neighbor available for next move
+        if(next){
+            next.isVisited = true;
+            next.previousCell = current;
+
+            removeWalls(current,next);
+        
+            current = next;
+            visitedList.push(current);
+            fillCell(current.x, current.y , "#17fc03");
+        }
+        // no neighbor available but there are still unvisited cells
+         else if(visitedList.length !== size*size){ 
+            next = current.previousCell;         
+          current = next;
+           fillCell(current.x, current.y , "#17fc03");
+         }
+        // no cell remained unvisited
+        else{ 
+            clearInterval(idVar);
+            console.log("COMPLETED!");
+        }
+
+
+    }, frequency);
+}
+
+// create all cell objects
+function createCells (){
+    var cellList = new Array(size);
+    
+    for(var x = 0 ; x < size ; x++){
+        cellList[x] = new Array(size);
+        for(var y = 0 ; y < size ; y++){
+            cellList[x][y] = new Cell(x,y);
+        }
+    }
+
+    return cellList;
+}
 
 // draws all cells to canvas
 function draw(){
@@ -73,7 +92,6 @@ function draw(){
         }
     }
 }
-
 
 
 // Cell object constructor
